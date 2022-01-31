@@ -21,6 +21,7 @@ public class DatagramSocketClient {
     DatagramSocket socket;
     Scanner sc;
     String nom;
+    int contador;
 
     public DatagramSocketClient() {
         sc = new Scanner(System.in);
@@ -51,17 +52,26 @@ public class DatagramSocketClient {
     private byte[] getDataToRequest(byte[] data, int length) {
         String rebut = new String(data,0, length);
         //Imprimeix el nom del client + el que es reb del server i demana més dades
-        System.out.print(rebut);
-        String msg = sc.nextLine();
-        return msg.getBytes();
+
+        int nombre = ByteBuffer.wrap(data).getInt(); //data és l'array de bytes
+        byte[] resposta = ByteBuffer.allocate(4).putInt(nombre).array(); //num és un int
+        contador++;
+        System.out.print(nombre + " Contador: " + contador );
+
+        int x = sc.nextInt();
+        // return nom.getBytes();
+        byte[] resposta2 = ByteBuffer.allocate(4).putInt(x).array(); //num és un int
+        return resposta2;
     }
 
     //primer missatge que se li envia al server
     private byte[] getFirstRequest() {
-        System.out.println("Posa el teu numero: ");
-        nom = sc.nextLine();
-
-        return nom.getBytes();
+        System.out.println("Entra el teu numero: ");
+        //nom = sc.nextInt();
+        int x = sc.nextInt();
+        // return nom.getBytes();
+        byte[] resposta = ByteBuffer.allocate(4).putInt(x).array(); //num és un int
+        return resposta;
     }
 
     //Si se li diu adeu al server el client es desconnecta

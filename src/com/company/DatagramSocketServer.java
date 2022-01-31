@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 public class DatagramSocketServer {
     DatagramSocket socket;
     SecretNum secretNum = new SecretNum();
-    int num = 0;
+    int contador = 0;
 
     //Instàciar el socket
     public void init(int port) throws SocketException {
@@ -46,14 +46,26 @@ public class DatagramSocketServer {
     private byte[] processData(byte[] data, int lenght) {
         String msg = new String(data,0,lenght);
 
-        num ++;
+        int num = ByteBuffer.wrap(data).getInt(); //data és l'array de bytes
+
+        byte[] resposta = ByteBuffer.allocate(4).putInt(num).array(); //num és un int
+
+        contador ++;
         msg = msg.toUpperCase();
 
 
         System.out.println(msg);
 
-        String xd = "Intent número: " + num +"\n" +  "Pista: " + secretNum.comprova(msg);
-        return xd.getBytes();
+        String xd = contador + " " +  secretNum.comprova(num);
+
+        int fabrica = secretNum.comprova(num);
+        System.out.println(num + " "+ fabrica);
+
+        byte[] resposta2 = ByteBuffer.allocate(4).putInt(fabrica).array();
+
+        //return xd.getBytes();
+        return resposta2;
+
 
 
         //Imprimir el missatge rebut i retornar-lo
